@@ -5,7 +5,6 @@ using System.Threading;
 using System.IO;
 using SEModAPIExtensions.API.Plugin;
 using SEModAPIExtensions.API;
-using SEModAPI.API.Sandbox;
 
 namespace ConsoleInput
 {
@@ -40,11 +39,6 @@ namespace ConsoleInput
 			string input = "";
 			while (m_running)
 			{
-				if(!MySandboxGameWrapper.IsGameStarted)
-				{
-					Thread.Sleep(250);
-					continue;
-				}
 				if(Console.KeyAvailable == true)
 				{
 					
