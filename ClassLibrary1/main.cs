@@ -67,7 +67,7 @@ namespace ConsoleInput
 								Console.Write(emptyline);
 								Console.SetCursorPosition(0, Console.CursorTop);
 								if(m_history-1 >= 0)
-									input = history.ElementAt(m_history-1);
+									input = history.ElementAt(m_history -1);
 								Console.Write(input);
 								Console.SetOut(m_out);
 								break;
