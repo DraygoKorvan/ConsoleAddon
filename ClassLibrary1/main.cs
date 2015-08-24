@@ -16,6 +16,8 @@ namespace ConsoleInput
 		MemoryStream m_stream;
 		public override void Init()
 		{
+			if (!Environment.UserInteractive)
+				return;//dont load
 			if (m_chatHandleThread != null)
 				m_chatHandleThread.Abort();
 			m_running = true;
