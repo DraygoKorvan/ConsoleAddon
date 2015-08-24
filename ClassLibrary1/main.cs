@@ -3,29 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.IO;
-using SEModAPIExtensions.API.Plugin;
-using SEModAPIExtensions.API;
+using VRage.Plugins;
+using VRage.ModAPI;
+using Sandbox.Engine.Multiplayer;
 
 namespace ConsoleInput
 {
-	public class SEConsole : PluginBase
+	public class SEConsole : IDisposable, IPlugin
 	{
 		Thread m_chatHandleThread;
 		bool m_running = false;
 		StreamWriter m_out;
 		MemoryStream m_stream;
-		public override void Init()
-		{
-			if (m_chatHandleThread != null)
-				m_chatHandleThread.Abort();
-			m_running = true;
-			m_stream = new MemoryStream();
-			m_out = new StreamWriter(m_stream);
-			m_chatHandleThread = new Thread(mainloop);
-			m_chatHandleThread.Priority = ThreadPriority.BelowNormal;
-			m_chatHandleThread.Start();
 
-		}
 
 		private void mainloop()
 		{
@@ -117,7 +107,9 @@ namespace ConsoleInput
 						Console.Write(emptyline);
 						Console.SetCursorPosition(0, Console.CursorTop);
 						input = input.Trim();
-						ChatManager.Instance.SendPublicChatMessage(input);
+						if( Sandbox.MySandboxGame.IsGameReady)
+							MyMultiplayer.Static.SendChatMessage("Server: " + input);
+						//ChatManager.Instance.SendPublicChatMessage(input);
 						history.Add(input);
 						m_history = history.Count;
 					}
@@ -149,18 +141,30 @@ namespace ConsoleInput
 				Console.WriteLine(text);
 			m_out = new StreamWriter(new MemoryStream());
 		}
-		public override void Shutdown()
+
+
+		public void Dispose()
 		{
 			m_running = false;
-			Thread.Sleep(50);
 			m_chatHandleThread.Abort();
 		}
 
-		public override void Update()
+		public void Init(object gameInstance)
+		{
+			Console.WriteLine("Initializing Console Additions ....");
+			if (m_chatHandleThread != null)
+				m_chatHandleThread.Abort();
+			m_running = true;
+			m_stream = new MemoryStream();
+			m_out = new StreamWriter(m_stream);
+			m_chatHandleThread = new Thread(mainloop);
+			m_chatHandleThread.Priority = ThreadPriority.BelowNormal;
+			m_chatHandleThread.Start();
+		}
+
+		public void Update()
 		{
 			
 		}
-
-		
 	}
 }
