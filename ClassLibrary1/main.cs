@@ -42,7 +42,7 @@ namespace ConsoleInput
 				if(Console.KeyAvailable == true)
 				{
 					
-					//Console.Write(m_byte.ToString());
+					
 					Console.SetOut(m_out);
 					do
 					{
